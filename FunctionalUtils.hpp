@@ -146,7 +146,7 @@ public:
         for (const KVType & keyValue : input) {
 
             output.emplace(keyValue.first,
-                    std::accumulate(keyValue.second.cbegin(), keyValue.second.cend(), 0.0, func)
+                    std::accumulate(keyValue.second.cbegin(), keyValue.second.cend(), OType(), func)
                     );
         }
         return output;
