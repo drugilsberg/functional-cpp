@@ -19,7 +19,7 @@ int main(){
   vector<double> expectedMap={2, 6, 68, 100};
   function< double(int) > func1= [] (const int & element){return 2.0*element;};   
   vector<double> output= FunctionalUtils::map( test1,  func1 );
-  FunctionalUtils::mkString(output);
+  cout << FunctionalUtils::mkString(output) << endl;
   assert(expectedMap==output);
   cout << "passed!" << endl;
   
@@ -29,7 +29,7 @@ int main(){
   vector<double> expectedFilter={ 1.0, 1.2};
   cout << "Test filter..." << endl;
   auto filtered = FunctionalUtils::filter(test4,func3); 
-  FunctionalUtils::mkString(filtered);  
+  cout << FunctionalUtils::mkString(filtered) << endl;  
   assert( expectedFilter==filtered);
   cout << "passed!" << endl;
   
@@ -73,7 +73,7 @@ int main(){
   auto grouped = FunctionalUtils::groupBy(test3, func2);  
   for ( const auto & d : grouped){
       cout << d.first << " -> ";      
-      FunctionalUtils::mkString(d.second, ",");
+      cout << FunctionalUtils::mkString(d.second, ",") << endl;
   }
   assert(expectedGroupBy==grouped);
   cout << "passed!" << endl;

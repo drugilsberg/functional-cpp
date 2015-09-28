@@ -13,17 +13,21 @@
 #include<utility>
 #include<map>
 #include<set>
+#include<string>
+#include<sstream>
+#include<iterator>
 
 class FunctionalUtils {
 public:
 
     template <typename Container>
-    static void mkString(const Container & container, const char* separator = " ", std::ostream & out = std::cout) {
-        std::for_each(container.begin(), container.end() - 1, [&separator, &out]
-                (const typename Container::value_type & element) {
-            out << element << separator;
-        });
-        out << container.back() << std::endl;
+    static std::string mkString(const Container & container, const char* separator = " ") {
+        std::ostringstream oss;
+        std::copy(container.begin(), container.end() - 1, 
+            std::ostream_iterator<typename Container::value_type>(oss, separator)
+        );
+        oss << container.back();
+        return oss.str();
     }
 
     //template parameters
@@ -40,7 +44,6 @@ public:
     }
 
     //template parameters
-
     template < class Container>
     //declaration
     static Container filter(const Container & input,
@@ -99,7 +102,7 @@ public:
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Key, typename Comparator = std::less<Key>,
-    typename Value = std::vector<IType, IAllocator>,
+    typename Value = Container<IType, IAllocator>,
     typename KIAllocator = std::allocator< std::pair<const Key, IType> >,
     typename KIType = std::pair<const Key, IType>,
     typename KVAllocator = std::allocator< std::pair<const Key, Value> > >
@@ -119,12 +122,15 @@ public:
         typedef typename std::multimap<Key, IType, Comparator, KIAllocator>::const_iterator multiConstIt;
 
         for (const Key & key : keys) {
+
             std::pair<multiConstIt, multiConstIt> values = mapped.equal_range(key);
-            std::vector<IType> grouped;
-            grouped.reserve(std::distance(values.first, values.second));
-            for (multiConstIt it = values.first; it != values.second; ++it) {
-                grouped.push_back(it->second);
-            }
+
+            Container<IType,IAllocator> grouped;
+            std::transform(values.first, values.second, std::inserter(grouped, grouped.end()),
+                [](const KIType & keyValue) {
+                    return keyValue.second;
+                });
+
             output.emplace(key, grouped);
         }
         return output;
