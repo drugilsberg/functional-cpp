@@ -35,7 +35,7 @@ public:
     static Container<OType, OAllocator> map(const Container<IType, IAllocator> & input, const std::function<OType(IType)> & func) {
         //body
         Container<OType, OAllocator> output(input.size());
-        std::transform(input.begin(), input.end(), output.begin(), func);
+        std::transform(input.cbegin(), input.cend(), output.begin(), func);
         return output;
     }
 
@@ -46,9 +46,9 @@ public:
     static Container filter(const Container & input,
             const std::function<bool(typename Container::value_type)> & func) {
         //body
-        Container output;
-        typename Container::const_iterator filtered = std::copy_if(input.begin(), input.end(), output.begin(), func);
-        output.resize(std::distance(output.begin(), filtered));
+        Container output(input.size());
+        typename Container::const_iterator filtered = std::copy_if(input.cbegin(), input.cend(), output.begin(), func);
+        output.resize(std::distance(output.cbegin(), filtered));
         return output;
     }
 
@@ -86,7 +86,7 @@ public:
             const std::function< Key(IType)> & func) {
         //body
         std::multimap<Key, IType, Comparator, KIAllocator> output;
-        std::transform(input.begin(), input.end(), std::inserter(output, output.end()),
+        std::transform(input.cbegin(), input.cend(), std::inserter(output, output.end()),
                 [&func](const IType & element) {
                     return std::make_pair(func(element), element);
                 }
@@ -111,7 +111,7 @@ public:
                 
         const std::multimap<Key, IType, Comparator, KIAllocator>  & mapped = keyBy(input, func);
         std::set<Key> keys;
-        std::transform(mapped.begin(), mapped.end(), std::inserter(keys, keys.begin()), 
+        std::transform(mapped.cbegin(), mapped.cend(), std::inserter(keys, keys.begin()), 
                 []( const KIType & keyValue ) { return keyValue.first;});
         
         typedef typename std::multimap<Key, IType, Comparator, KIAllocator>::const_iterator multiConstIt;

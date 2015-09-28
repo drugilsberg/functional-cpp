@@ -23,6 +23,17 @@ int main(){
   assert(expectedMap==output);
   cout << "passed!" << endl;
   
+  
+   vector<double> test4={1.0, 1.2, 2.0, 2.3, 3.0};
+  function< bool(double) > func3= [] (const double & element){return element<2.0;};
+  vector<double> expectedFilter={ 1.0, 1.2};
+  cout << "Test filter..." << endl;
+  auto filtered = FunctionalUtils::filter(test4,func3); 
+  FunctionalUtils::mkString(filtered);  
+  assert( expectedFilter==filtered);
+  cout << "passed!" << endl;
+  
+  
   cout << "Test zip..." << endl;
   vector< std::pair<int,double> > expectedZip={
       std::make_pair(1,1.0),
