@@ -26,4 +26,6 @@ ENDIF()
 
 
 add_executable(functional main.cpp)
+
+enable_testing()
 add_test (TutorialRuns functional)
