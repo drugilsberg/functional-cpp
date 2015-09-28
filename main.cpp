@@ -77,6 +77,25 @@ int main(){
   }
   assert(expectedGroupBy==grouped);
   cout << "passed!" << endl;
+  
+  cout << "Test reduceByKey..." << endl;
+  map<int, vector<double> > test5={
+      std::make_pair(1, std::vector<double>{1.0, 1.2}),      
+      std::make_pair(2, std::vector<double>{2.0, 2.3}),      
+      std::make_pair(3, std::vector<double>{3.0})      
+  };
+  map<int, double > expectedReduceByKey={
+      std::make_pair(1, 2.2),      
+      std::make_pair(2, 4.3),      
+      std::make_pair(3, 3.0)      
+  };
+  std::function< double(double,double)  > func4= [](double  a, double  b){return a+b;};
+  auto reduced = FunctionalUtils::reduceByKey(test5, func4);  
+  for ( const auto & d : reduced){
+      cout << d.first << " -> " << d.second << endl;
+  }
+  assert(expectedReduceByKey==reduced);
+  cout << "passed!" << endl;
 
   return 0;
 
