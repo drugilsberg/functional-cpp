@@ -22,16 +22,17 @@ namespace Functional {
 
     template <typename Container>
     static std::string mkString(const Container & container, const char* separator = " ") {
-        std::ostringstream oss;
+        std::ostringstream oss("");
+        if(!container.empty()){
         std::copy(container.begin(), container.end() - 1, 
             std::ostream_iterator<typename Container::value_type>(oss, separator)
         );
         oss << container.back();
+        }
         return oss.str();
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename OType, typename OAllocator = std::allocator<OType> >
@@ -79,7 +80,6 @@ namespace Functional {
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Key, typename Comparator = std::less<Key>,
