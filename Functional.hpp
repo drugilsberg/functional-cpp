@@ -1,12 +1,12 @@
 /* 
- * File:   FunctionalUtils.hpp
+ * File:   Functional.hpp
  * Author: manica
  *
  * Created on September 11, 2015, 2:05 PM
  */
 
-#ifndef FUNCTIONALUTILS_HPP
-#define	FUNCTIONALUTILS_HPP
+#ifndef FUNCTIONAL_HPP
+#define	FUNCTIONAL_HPP
 
 #include<algorithm>
 #include<functional>
@@ -17,8 +17,8 @@
 #include<sstream>
 #include<iterator>
 
-class FunctionalUtils {
-public:
+namespace Functional {
+
 
     template <typename Container>
     static std::string mkString(const Container & container, const char* separator = " ") {
@@ -112,7 +112,7 @@ public:
         //body
         std::map<Key, Value, Comparator, KVAllocator> output;
 
-        const std::multimap<Key, IType, Comparator, KIAllocator> & mapped = keyBy(input, func);
+        const std::multimap<Key, IType, Comparator, KIAllocator> & mapped = Functional::keyBy(input, func);
         std::set<Key> keys;
         std::transform(mapped.cbegin(), mapped.cend(), std::inserter(keys, keys.begin()),
                 [](const KIType & keyValue) {
@@ -158,10 +158,8 @@ public:
         return output;
     }
 
-
-
 };
 
 
-#endif	/* FUNCTIONALUTILS_HPP */
+#endif	/* FUNCTIONAL_HPP */
 

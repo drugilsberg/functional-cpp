@@ -1,7 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<math.h>
-#include "FunctionalUtils.hpp"
+#include "Functional.hpp"
 
 #include<cassert>
 
@@ -18,8 +18,8 @@ int main(){
   cout << "Test map..." << endl;
   vector<double> expectedMap={2, 6, 68, 100};
   function< double(int) > func1= [] (const int & element){return 2.0*element;};   
-  vector<double> output= FunctionalUtils::map( test1,  func1 );
-  cout << FunctionalUtils::mkString(output) << endl;
+  vector<double> output= Functional::map( test1,  func1 );
+  cout << Functional::mkString(output) << endl;
   assert(expectedMap==output);
   cout << "passed!" << endl;
   
@@ -28,8 +28,8 @@ int main(){
   function< bool(double) > func3= [] (const double & element){return element<2.0;};
   vector<double> expectedFilter={ 1.0, 1.2};
   cout << "Test filter..." << endl;
-  auto filtered = FunctionalUtils::filter(test4,func3); 
-  cout << FunctionalUtils::mkString(filtered) << endl;  
+  auto filtered = Functional::filter(test4,func3); 
+  cout << Functional::mkString(filtered) << endl;  
   assert( expectedFilter==filtered);
   cout << "passed!" << endl;
   
@@ -40,7 +40,7 @@ int main(){
       std::make_pair(3,2.0),
       std::make_pair(34, 3.0)      
   };
-  auto outputZip = FunctionalUtils::zip(test1, test2);  
+  auto outputZip = Functional::zip(test1, test2);  
   for( const auto & couple : outputZip){
     std::cout << couple.first << " "<< couple.second << std::endl;
   }
@@ -57,7 +57,7 @@ int main(){
       std::make_pair(3, 3.0)      
   };
   cout << "Test keyBy..." << endl;
-  auto keyed = FunctionalUtils::keyBy(test3,func2); 
+  auto keyed = Functional::keyBy(test3,func2); 
   for( const auto & d : keyed){
       cout << d.first << " -> " << d.second << endl;
   }
@@ -70,10 +70,10 @@ int main(){
       std::make_pair(2, std::vector<double>{2.0, 2.3}),      
       std::make_pair(3, std::vector<double>{3.0})      
   };
-  auto grouped = FunctionalUtils::groupBy(test3, func2);  
+  auto grouped = Functional::groupBy(test3, func2);  
   for ( const auto & d : grouped){
       cout << d.first << " -> ";      
-      cout << FunctionalUtils::mkString(d.second, ",") << endl;
+      cout << Functional::mkString(d.second, ",") << endl;
   }
   assert(expectedGroupBy==grouped);
   cout << "passed!" << endl;
@@ -90,7 +90,7 @@ int main(){
       std::make_pair(3, 3.0)      
   };
   std::function< double(double,double)  > func4= [](double  a, double  b){return a+b;};
-  auto reduced = FunctionalUtils::reduceByKey(test5, func4);  
+  auto reduced = Functional::reduceByKey(test5, func4);  
   for ( const auto & d : reduced){
       cout << d.first << " -> " << d.second << endl;
   }
