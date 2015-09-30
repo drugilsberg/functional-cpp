@@ -18,21 +18,38 @@
 #include<iterator>
 
 namespace Functional {
-
-
-    template <typename Container>
-    static std::string mkString(const Container & container, const char* separator = " ") {
+   
+    template <template <typename, typename... > class Container,
+    typename Type, typename... VarArgs >
+    static std::string mkString(const Container<Type, VarArgs...> & container, const char* separator = " ") {
         std::ostringstream oss("");
-        if(!container.empty()){
-        std::copy(container.begin(), container.end() - 1, 
-            std::ostream_iterator<typename Container::value_type>(oss, separator)
-        );
-        oss << container.back();
+        if (!container.empty()) {
+            
+            auto itBeforeLast= container.end();
+            --itBeforeLast;
+            for (auto it = container.cbegin(); it != itBeforeLast; ++it) {
+                oss << *it << separator;
+            }
+            oss << *container.crbegin();
         }
         return oss.str();
     }
+    
+     template <typename T, typename U>
+    std::ostream& operator<<(std::ostream& out, const std::pair<T, U>& p) {
+        out << "(" << p.first << "->" << p.second << ")";
+        return out;
+    }
+    
+    template <typename T, template <typename, typename> class Container,
+            typename Type, typename Allocator=std::allocator<Type> >
+    std::ostream& operator<<(std::ostream& out, const std::pair<T, Container<Type, Allocator> >& p) {
+        out << "(" << p.first << "-> [" << Functional::mkString(p.second) << "])";
+        return out;
+    }
 
     //template parameters
+
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename OType, typename OAllocator = std::allocator<OType> >
@@ -45,6 +62,7 @@ namespace Functional {
     }
 
     //template parameters
+
     template < class Container>
     //declaration
     static Container filter(const Container & input,
@@ -80,6 +98,7 @@ namespace Functional {
     }
 
     //template parameters
+
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Key, typename Comparator = std::less<Key>,
@@ -125,24 +144,24 @@ namespace Functional {
 
             std::pair<multiConstIt, multiConstIt> values = mapped.equal_range(key);
 
-            Container<IType,IAllocator> grouped;
+            Container<IType, IAllocator> grouped;
             std::transform(values.first, values.second, std::inserter(grouped, grouped.end()),
-                [](const KIType & keyValue) {
-                    return keyValue.second;
-                });
+                    [](const KIType & keyValue) {
+                        return keyValue.second;
+                    });
 
             output.emplace(key, grouped);
         }
         return output;
     }
 
-    template < template <typename, typename> class Container,    
-    typename IType, typename IAllocator = std::allocator<IType>,    
+    template < template <typename, typename> class Container,
+    typename IType, typename IAllocator = std::allocator<IType>,
     typename Value = Container<IType, IAllocator>,
     typename Key, typename Comparator = std::less<Key>,
     typename KVType = std::pair<const Key, Value>,
     typename KVAllocator = std::allocator< KVType >,
-    typename OType, typename KOAllocator = std::allocator< std::pair<const Key, OType> > >        
+    typename OType, typename KOAllocator = std::allocator< std::pair<const Key, OType> > >
     //declaration
     static std::map<Key, OType, Comparator, KOAllocator> reduceByKey(const std::map<Key, Container<IType, IAllocator>, Comparator, KVAllocator > & input,
             const std::function< OType(IType, IType)> & func) {

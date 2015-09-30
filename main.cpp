@@ -97,6 +97,10 @@ int main(){
   assert(expectedReduceByKey==reduced);
   cout << "passed!" << endl;
 
+  
+  cout << Functional::mkString(expectedKeyBy,",") << endl;
+  cout << Functional::mkString(expectedGroupBy,",") << endl;
+  
   return 0;
 
 }
