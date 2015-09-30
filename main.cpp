@@ -58,9 +58,7 @@ int main(){
   };
   cout << "Test keyBy..." << endl;
   auto keyed = Functional::keyBy(test3,func2); 
-  for( const auto & d : keyed){
-      cout << d.first << " -> " << d.second << endl;
-  }
+  cout << Functional::mkString(keyed) << endl;
   assert( expectedKeyBy==keyed);
   cout << "passed!" << endl;
   
@@ -71,10 +69,7 @@ int main(){
       std::make_pair(3, std::vector<double>{3.0})      
   };
   auto grouped = Functional::groupBy(test3, func2);  
-  for ( const auto & d : grouped){
-      cout << d.first << " -> ";      
-      cout << Functional::mkString(d.second, ",") << endl;
-  }
+  cout << Functional::mkString(grouped) << endl;
   assert(expectedGroupBy==grouped);
   cout << "passed!" << endl;
   
@@ -91,16 +86,10 @@ int main(){
   };
   std::function< double(double,double)  > func4= [](double  a, double  b){return a+b;};
   auto reduced = Functional::reduceByKey(test5, func4);  
-  for ( const auto & d : reduced){
-      cout << d.first << " -> " << d.second << endl;
-  }
+  cout << Functional::mkString(reduced) << endl;
   assert(expectedReduceByKey==reduced);
   cout << "passed!" << endl;
-
-  
-  cout << Functional::mkString(expectedKeyBy,",") << endl;
-  cout << Functional::mkString(expectedGroupBy,",") << endl;
-  
+ 
   return 0;
 
 }
