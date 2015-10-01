@@ -21,24 +21,30 @@
 
 namespace Functional {
 
+    //template parameters
     template <template <typename, typename... > class Container,
     typename Type, typename... VarArgs >
+    //declaration
     static std::string mkString(const Container<Type, VarArgs...> & container, const char* separator = " ") {
+        //body
         std::ostringstream oss("");
         if (!container.empty()) {
 
             for (auto it = container.cbegin(); it != container.cend(); ++it) {
-                if( it != container.cbegin()){
+                if (it != container.cbegin()) {
                     oss << separator;
                 }
-                oss << *it ;
+                oss << *it;
             }
         }
         return oss.str();
     }
 
+    //template parameters
     template <typename T, typename U>
+    //declaration
     std::ostream& operator<<(std::ostream& out, const std::pair<T, U>& p) {
+        //body
         out << "(" << p.first << "->" << p.second << ")";
         return out;
     }
@@ -51,7 +57,6 @@ namespace Functional {
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename OType, typename OAllocator = std::allocator<OType> >
@@ -64,7 +69,26 @@ namespace Functional {
     }
 
     //template parameters
+    template < class Container,
+    typename Value = typename Container::value_type, typename OType>
+    //declaration
+    static OType foldLeft(const Container & input,
+            const std::function<OType(Value, Value)> & func, const OType & init = OType()) {
+        //body       
+        return std::accumulate(input.cbegin(), input.cend(), init, func);
+    }
 
+    //template parameters
+    template < class Container,
+    typename Value = typename Container::value_type, typename OType>
+    //declaration
+    static OType foldRight(const Container & input,
+            const std::function<OType(Value, Value)> & func, const OType & init = OType()) {
+        //body       
+        return std::accumulate(input.crbegin(), input.crend(), init, func);
+    }
+    
+    //template parameters
     template < class Container>
     //declaration
     static Container filter(const Container & input,
@@ -77,7 +101,6 @@ namespace Functional {
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename FirstType, typename FirstAllocator = std::allocator<FirstType>,
     typename SecondType, typename SecondAllocator = std::allocator<SecondType>,
@@ -100,7 +123,6 @@ namespace Functional {
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Key, typename Comparator = std::equal_to<Key>, typename Hash = std::hash<Key>,
@@ -119,7 +141,6 @@ namespace Functional {
     }
 
     //template parameters
-
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Key, typename Comparator = std::equal_to<Key>, typename Hash = std::hash<Key>,
@@ -157,6 +178,7 @@ namespace Functional {
         return output;
     }
 
+    //template parameters
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Value = Container<IType, IAllocator>,
