@@ -12,37 +12,39 @@
 #include<functional>
 #include<utility>
 #include<map>
+#include<unordered_map>
 #include<set>
+#include<unordered_set>
 #include<string>
 #include<sstream>
 #include<iterator>
 
 namespace Functional {
-   
+
     template <template <typename, typename... > class Container,
     typename Type, typename... VarArgs >
     static std::string mkString(const Container<Type, VarArgs...> & container, const char* separator = " ") {
         std::ostringstream oss("");
         if (!container.empty()) {
-            
-            auto itBeforeLast= container.end();
-            --itBeforeLast;
-            for (auto it = container.cbegin(); it != itBeforeLast; ++it) {
-                oss << *it << separator;
+
+            for (auto it = container.cbegin(); it != container.cend(); ++it) {
+                if( it != container.cbegin()){
+                    oss << separator;
+                }
+                oss << *it ;
             }
-            oss << *container.crbegin();
         }
         return oss.str();
     }
-    
-     template <typename T, typename U>
+
+    template <typename T, typename U>
     std::ostream& operator<<(std::ostream& out, const std::pair<T, U>& p) {
         out << "(" << p.first << "->" << p.second << ")";
         return out;
     }
-    
+
     template <typename T, template <typename, typename> class Container,
-            typename Type, typename Allocator=std::allocator<Type> >
+    typename Type, typename Allocator = std::allocator<Type> >
     std::ostream& operator<<(std::ostream& out, const std::pair<T, Container<Type, Allocator> >& p) {
         out << "(" << p.first << "-> [" << Functional::mkString(p.second) << "])";
         return out;
@@ -101,13 +103,13 @@ namespace Functional {
 
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
-    typename Key, typename Comparator = std::less<Key>,
+    typename Key, typename Comparator = std::equal_to<Key>, typename Hash = std::hash<Key>,
     typename KIAllocator = std::allocator< std::pair<const Key, IType> > >
     //declaration
-    static std::multimap<Key, IType, Comparator, KIAllocator> keyBy(const Container<IType, IAllocator> & input,
+    static std::unordered_multimap<Key, IType, Hash, Comparator, KIAllocator> keyBy(const Container<IType, IAllocator> & input,
             const std::function< Key(IType)> & func) {
         //body
-        std::multimap<Key, IType, Comparator, KIAllocator> output;
+        std::unordered_multimap<Key, IType, Hash, Comparator, KIAllocator> output;
         std::transform(input.cbegin(), input.cend(), std::inserter(output, output.end()),
                 [&func](const IType & element) {
                     return std::make_pair(func(element), element);
@@ -120,25 +122,25 @@ namespace Functional {
 
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
-    typename Key, typename Comparator = std::less<Key>,
+    typename Key, typename Comparator = std::equal_to<Key>, typename Hash = std::hash<Key>,
     typename Value = Container<IType, IAllocator>,
     typename KIAllocator = std::allocator< std::pair<const Key, IType> >,
     typename KIType = std::pair<const Key, IType>,
     typename KVAllocator = std::allocator< std::pair<const Key, Value> > >
     //declaration
-    static std::map<Key, Value, Comparator, KVAllocator> groupBy(const Container<IType, IAllocator> & input,
+    static std::unordered_map<Key, Value, Hash, Comparator, KVAllocator> groupBy(const Container<IType, IAllocator> & input,
             const std::function< Key(IType)> & func) {
         //body
-        std::map<Key, Value, Comparator, KVAllocator> output;
+        std::unordered_map<Key, Value, Hash, Comparator, KVAllocator> output;
 
-        const std::multimap<Key, IType, Comparator, KIAllocator> & mapped = Functional::keyBy(input, func);
-        std::set<Key> keys;
+        const std::unordered_multimap<Key, IType, Hash, Comparator, KIAllocator> & mapped = Functional::keyBy(input, func);
+        std::unordered_set<Key> keys;
         std::transform(mapped.cbegin(), mapped.cend(), std::inserter(keys, keys.begin()),
                 [](const KIType & keyValue) {
                     return keyValue.first;
                 });
 
-        typedef typename std::multimap<Key, IType, Comparator, KIAllocator>::const_iterator multiConstIt;
+        typedef typename std::unordered_multimap<Key, IType, Hash, Comparator, KIAllocator>::const_iterator multiConstIt;
 
         for (const Key & key : keys) {
 
@@ -158,15 +160,16 @@ namespace Functional {
     template < template <typename, typename> class Container,
     typename IType, typename IAllocator = std::allocator<IType>,
     typename Value = Container<IType, IAllocator>,
-    typename Key, typename Comparator = std::less<Key>,
+    typename Key, typename Comparator = std::equal_to<Key>, typename Hash = std::hash<Key>,
     typename KVType = std::pair<const Key, Value>,
     typename KVAllocator = std::allocator< KVType >,
     typename OType, typename KOAllocator = std::allocator< std::pair<const Key, OType> > >
     //declaration
-    static std::map<Key, OType, Comparator, KOAllocator> reduceByKey(const std::map<Key, Container<IType, IAllocator>, Comparator, KVAllocator > & input,
+    static std::unordered_map<Key, OType, Hash, Comparator, KOAllocator> reduceByKey(
+            const std::unordered_map<Key, Container<IType, IAllocator>, Hash, Comparator, KVAllocator > & input,
             const std::function< OType(IType, IType)> & func) {
         //body
-        std::map<Key, OType, Comparator, KOAllocator> output;
+        std::unordered_map<Key, OType, Hash, Comparator, KOAllocator> output;
 
         for (const KVType & keyValue : input) {
 

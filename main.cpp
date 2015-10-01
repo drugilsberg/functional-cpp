@@ -35,26 +35,26 @@ int main(){
   
   
   cout << "Test zip..." << endl;
-  vector< std::pair<int,double> > expectedZip={
-      std::make_pair(1,1.0),
-      std::make_pair(3,2.0),
-      std::make_pair(34, 3.0)      
+  vector< pair<int,double> > expectedZip={
+      make_pair(1,1.0),
+      make_pair(3,2.0),
+      make_pair(34, 3.0)      
   };
   auto outputZip = Functional::zip(test1, test2);  
   for( const auto & couple : outputZip){
-    std::cout << couple.first << " "<< couple.second << std::endl;
+    cout << couple.first << " "<< couple.second << endl;
   }
   assert( expectedZip==outputZip);
   cout << "passed!" << endl;
   
   vector<double> test3={1.0, 1.2, 2.0, 2.3, 3.0};
   function< int(double) > func2= [] (const double & element){return (int)element;};
-  multimap<int, double> expectedKeyBy={
-      std::make_pair(1,1.0),
-      std::make_pair(1,1.2),
-      std::make_pair(2,2.0),
-      std::make_pair(2,2.3),
-      std::make_pair(3, 3.0)      
+  unordered_multimap<int, double> expectedKeyBy={
+      make_pair(1,1.0),
+      make_pair(1,1.2),
+      make_pair(2,2.0),
+      make_pair(2,2.3),
+      make_pair(3, 3.0)      
   };
   cout << "Test keyBy..." << endl;
   auto keyed = Functional::keyBy(test3,func2); 
@@ -63,28 +63,37 @@ int main(){
   cout << "passed!" << endl;
   
   cout << "Test groupBy..." << endl;
-  map<int, vector<double> > expectedGroupBy={
-      std::make_pair(1, std::vector<double>{1.0, 1.2}),      
-      std::make_pair(2, std::vector<double>{2.0, 2.3}),      
-      std::make_pair(3, std::vector<double>{3.0})      
+  unordered_map<int, vector<double> > expectedGroupBy={
+      make_pair(1, vector<double>{1.0, 1.2}),      
+      make_pair(2, vector<double>{2.0, 2.3}),      
+      make_pair(3, vector<double>{3.0})      
   };
   auto grouped = Functional::groupBy(test3, func2);  
   cout << Functional::mkString(grouped) << endl;
+
+  
+  for( auto & kv : grouped ){
+      sort(kv.second.begin(), kv.second.end());
+  }  
+  for( auto & kv : expectedGroupBy ){
+      sort(kv.second.begin(), kv.second.end());
+  }
+  
   assert(expectedGroupBy==grouped);
   cout << "passed!" << endl;
   
   cout << "Test reduceByKey..." << endl;
-  map<int, vector<double> > test5={
-      std::make_pair(1, std::vector<double>{1.0, 1.2}),      
-      std::make_pair(2, std::vector<double>{2.0, 2.3}),      
-      std::make_pair(3, std::vector<double>{3.0})      
+  unordered_map<int, vector<double> > test5={
+      make_pair(1, vector<double>{1.0, 1.2}),      
+      make_pair(2, vector<double>{2.0, 2.3}),      
+      make_pair(3, vector<double>{3.0})      
   };
-  map<int, double > expectedReduceByKey={
-      std::make_pair(1, 2.2),      
-      std::make_pair(2, 4.3),      
-      std::make_pair(3, 3.0)      
+  unordered_map<int, double > expectedReduceByKey={
+      make_pair(1, 2.2),      
+      make_pair(2, 4.3),      
+      make_pair(3, 3.0)      
   };
-  std::function< double(double,double)  > func4= [](double  a, double  b){return a+b;};
+  function< double(double,double)  > func4= [](double  a, double  b){return a+b;};
   auto reduced = Functional::reduceByKey(test5, func4);  
   cout << Functional::mkString(reduced) << endl;
   assert(expectedReduceByKey==reduced);
