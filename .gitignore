@@ -6,3 +6,4 @@ functional
 nbproject
 CTestTestfile.cmake
 Testing
+*_test
