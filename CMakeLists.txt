@@ -4,7 +4,7 @@ set(PROJECT_NAME "functional")
 project(${PROJECT_NAME})
 
 set(${PROJECT_NAME}_HEADERS
-    FunctionalUtils.hpp
+    Functional.hpp
 )
 
   

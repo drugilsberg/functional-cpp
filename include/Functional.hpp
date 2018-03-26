@@ -5,8 +5,8 @@
  * Created on September 11, 2015, 2:05 PM
  */
 
-#ifndef FUNCTIONAL_HPP
-#define	FUNCTIONAL_HPP
+#ifndef _FUNCTIONAL_HPP_
+#define	_FUNCTIONAL_HPP_
 
 #include<algorithm>
 #include<functional>
@@ -205,5 +205,5 @@ namespace Functional {
 };
 
 
-#endif	/* FUNCTIONAL_HPP */
+#endif	/* _FUNCTIONAL_HPP_ */
 
