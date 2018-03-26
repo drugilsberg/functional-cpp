@@ -1,0 +1,17 @@
+language: cpp
+compiler:
+  - gcc
+  - clang
+os: linux
+sudo: required
+dist: trusty
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake .. 
+
+script:
+  - make VERBOSE=1
+  - make test CTEST_OUTPUT_ON_FAILURE=TRUE
+
