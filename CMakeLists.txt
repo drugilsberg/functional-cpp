@@ -1,21 +1,17 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 
-set(PROJECT_NAME "functional")
+set(PROJECT_NAME "functional-cpp")
 project(${PROJECT_NAME})
 
 set(${PROJECT_NAME}_HEADERS
     Functional.hpp
 )
-
   
 set (${PROJECT_NAME}_MAJOR_VERSION 0)
 set (${PROJECT_NAME}_MINOR_VERSION 0)
 set (${PROJECT_NAME}_PATCH_VERSION 1)
 set(${PROJECT_NAME}_VERSION
       ${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION})
-
-
-
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
 # Set specific flags for the three different build types (Release, debug and Profile)
@@ -32,9 +28,7 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Profile")
   message("Compiling with flags:\n  ${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_PROFILE}")
 endif()
 
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/functional-cpp/include)
-
 
 option(${PROJECT_NAME}_ENABLE_TESTS "Enable tests" ON)
 if(${PROJECT_NAME}_ENABLE_TESTS)
